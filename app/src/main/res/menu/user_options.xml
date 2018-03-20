@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/dishes"
+       android:title="dishes"/>
+
+    <item android:id="@+id/cart"
+        android:title="cart"/>
+
+    <item android:id="@+id/orders"
+        android:title="orders"/>
+
+    <item android:id="@+id/history"
+        android:title="history"/>
+
     <item android:id="@+id/logout"
-          android:title="logout"
+        android:title="logout"
         />
-
-
 </menu>

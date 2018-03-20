@@ -4,28 +4,89 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.android.swad.Adapters.*;
+import com.example.android.swad.Entities.Item;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class WelcomeActivity extends AppCompatActivity  {
 
+    ArrayList<String> catagories;
+    HashMap<String,Integer> hs=new HashMap<String,Integer>();
+    CatagoryAdapter cad;
+    RecyclerView rview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        /*Bundle b=getIntent().getExtras();
-        if(b!=null)
-        {
-            String extras=b.getString("username");
-            ((TextView)findViewById(R.id.welcome_message)).setText(extras);
-        }
-        */
-        SharedPreferences sh= PreferenceManager.getDefaultSharedPreferences(this);
-        ((TextView)findViewById(R.id.welcome_message)).setText(sh.getString("username","abcd"));
+        setSupportActionBar((Toolbar)findViewById(R.id.my_toolbar));
 
+        catagories=new ArrayList<>();
+         rview=(RecyclerView)findViewById(R.id.catagory_item_list);
+         rview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        DatabaseReference database= FirebaseDatabase.getInstance().getReference("dishes");
+
+        database.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    addchild(dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    removechild(dataSnapshot);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        CatagoryAdapter.RecyclerViewClickListerner mListener=new CatagoryAdapter.RecyclerViewClickListerner() {
+            @Override
+            public void onClick(View view, int position) {
+                Button b=(Button)view.findViewById(R.id.catagory_name);
+                Intent i=new Intent(WelcomeActivity.this,ItemActivity.class);
+                i.putExtra("catagory_name",b.getText().toString());
+                startActivity(i);
+            }
+        };
+
+
+         cad=new CatagoryAdapter(catagories,mListener);
+        rview.setAdapter(cad);
     }
 
 
@@ -46,10 +107,42 @@ public class WelcomeActivity extends AppCompatActivity  {
                 startActivity(i);
                 finish();
                 break;
+            case R.id.dishes:
+                break;
+            case R.id.cart:
+                break;
+            case R.id.orders:
+                break;
+
         }
         return true;
     }
 
+    void addchild(DataSnapshot dataSnapshot)
+    {
+        String catagory=dataSnapshot.child("catagory").getValue().toString();
+        catagories.add(catagory);
+
+        if(!hs.containsKey(catagory))
+            hs.put(catagory,1);
+        else
+            hs.put(catagory,hs.get(catagory)+1);
+        cad.setmValues(new ArrayList<String>(catagories));
+        cad.notifyDataSetChanged();
+
+    }
+
+    void removechild(DataSnapshot dataSnapshot)
+    {
+        String catagory=dataSnapshot.child("catagory").getValue().toString();
+        if(hs.get(catagory)==1)
+        {
+            catagories.remove(catagory);
+            cad.notifyDataSetChanged();
+            cad.getmValues().remove(catagory);
+        }
+        hs.put(catagory,hs.get(catagory)-1);
+    }
 
 
 }

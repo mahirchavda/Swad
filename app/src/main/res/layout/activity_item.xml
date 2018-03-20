@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.android.swad.MainActivity"
-    android:id="@+id/catagory_listview"
-    >
+    tools:context="com.example.android.swad.ItemActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        >
+        android:id="@+id/appBarLayout">
 
 
         <android.support.v7.widget.Toolbar
@@ -22,23 +19,34 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            />
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
 
 
     </android.support.design.widget.AppBarLayout>
 
+
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/catagory_item_list"
-        android:name="fire1.android.com.login.CatagoryFragment"
+        android:id="@+id/list"
+        android:name="fire1.android.com.login.ItemFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="fire1.android.com.login.CatagoryFragment"
-        tools:listitem="@layout/catagory_item"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/appBarLayout"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="fire1.android.com.login.ItemFragment"
+        tools:listitem="@layout/dishes_item" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="add to cart"
+        android:visibility="gone"
+        android:id="@+id/add_to_cart"
         />
-</LinearLayout>
+
+
+
+</RelativeLayout>
