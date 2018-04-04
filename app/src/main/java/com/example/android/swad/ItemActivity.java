@@ -140,13 +140,19 @@ public class ItemActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.dishes:
+                startActivity(new Intent(this,WelcomeActivity.class));
                 break;
             case R.id.cart:
+                startActivity(new Intent(this,CartActivity.class));
                 break;
             case R.id.orders:
+                startActivity(new Intent(this,OrderActivity.class));
                 break;
-
+            case R.id.history:
+                startActivity(new Intent(this,HistoryActivity.class));
+                break;
         }
         return true;
     }
+
 }

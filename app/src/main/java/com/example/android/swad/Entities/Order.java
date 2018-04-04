@@ -1,6 +1,8 @@
 package com.example.android.swad.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by jenil on 08-03-2018.
@@ -11,6 +13,52 @@ public class Order implements Serializable {
     private String item_name;
     private String status;
     private int quantity;
+    private int remaining;
+    private String ordernumber;
+    private long waiting_time;
+    private int item_waiting_time;
+
+    public int getItem_waiting_time() {
+        return item_waiting_time;
+    }
+
+    public void setItem_waiting_time(int item_waiting_time) {
+        this.item_waiting_time = item_waiting_time;
+    }
+
+    private HashMap<String,String> chefs;
+
+    public int getRemaining() {
+        return remaining;
+    }
+
+    public void setRemaining(int remaining) {
+        this.remaining = remaining;
+    }
+
+    public String getOrdernumber() {
+        return ordernumber;
+    }
+
+    public void setOrdernumber(String ordernumber) {
+        this.ordernumber = ordernumber;
+    }
+
+    public HashMap<String,String> getChefs() {
+        return chefs;
+    }
+
+    public long getWaiting_time() {
+        return waiting_time;
+    }
+
+    public void setWaiting_time(long waiting_time) {
+        this.waiting_time = waiting_time;
+    }
+
+    public void setChefs(HashMap<String,String> chefs) {
+        this.chefs = chefs;
+    }
 
     public String getUid() {
         return uid;
@@ -45,8 +93,15 @@ public class Order implements Serializable {
     }
 
     public Order() {
-
+        chefs=new HashMap<>();
     }
+
+    public boolean equals(Object o)
+    {
+        Order os=(Order)o;
+        return(o!=null && os!=null && os.getOrdernumber()!=null && getOrdernumber()!=null && ordernumber.compareTo(os.getOrdernumber())==0 && remaining==os.getRemaining());
+    }
+
 
     public Order(String uid, String item_name, String status, int quantity) {
 

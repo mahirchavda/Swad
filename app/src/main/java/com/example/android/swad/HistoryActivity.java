@@ -2,65 +2,65 @@ package com.example.android.swad;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.swad.Adapters.*;
-import com.example.android.swad.Entities.Item;
+import com.example.android.swad.Adapters.OrderAdapter;
+import com.example.android.swad.Entities.Order;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 
-public class WelcomeActivity extends AppCompatActivity  {
+public class HistoryActivity extends AppCompatActivity {
 
-    ArrayList<String> catagories;
-    HashMap<String,Integer> hs=new HashMap<String,Integer>();
-    CatagoryAdapter cad;
     RecyclerView rview;
+    OrderAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.activity_history);
         setSupportActionBar((Toolbar)findViewById(R.id.my_toolbar));
+        adapter=new OrderAdapter(new ArrayList<Order>());
+        rview=findViewById(R.id.history_order_list);
+        rview.setAdapter(adapter);
 
-        catagories=new ArrayList<>();
-         rview=(RecyclerView)findViewById(R.id.catagory_item_list);
-         rview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        DatabaseReference database= FirebaseDatabase.getInstance().getReference("dishes");
+        DatabaseReference ref= FirebaseDatabase.getInstance().getReference("orders");
 
-        database.addChildEventListener(new ChildEventListener() {
+        ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    addchild(dataSnapshot);
+                Order o=dataSnapshot.getValue(Order.class);
+                if(o.getStatus().compareTo("completed")==0) {
+                    adapter.getmValues().add(0,o);
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                   /* Order o=dataSnapshot.getValue(Order.class);
+                    if(o.getStatus().compareTo("completed")==0) {
+                        adapter.getmValues().add(0,o);
+                        adapter.notifyDataSetChanged();
+                    }
+                    */
+                Toast.makeText(HistoryActivity.this, "changed", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    removechild(dataSnapshot);
+
             }
 
             @Override
@@ -74,21 +74,7 @@ public class WelcomeActivity extends AppCompatActivity  {
             }
         });
 
-        CatagoryAdapter.RecyclerViewClickListerner mListener=new CatagoryAdapter.RecyclerViewClickListerner() {
-            @Override
-            public void onClick(View view, int position) {
-                Button b=(Button)view.findViewById(R.id.catagory_name);
-                Intent i=new Intent(WelcomeActivity.this,ItemActivity.class);
-                i.putExtra("catagory_name",b.getText().toString());
-                startActivity(i);
-            }
-        };
-
-
-         cad=new CatagoryAdapter(catagories,mListener);
-        rview.setAdapter(cad);
     }
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.user_options,menu);
@@ -108,6 +94,7 @@ public class WelcomeActivity extends AppCompatActivity  {
                 finish();
                 break;
             case R.id.dishes:
+                startActivity(new Intent(this,WelcomeActivity.class));
                 break;
             case R.id.cart:
                 startActivity(new Intent(this,CartActivity.class));
@@ -116,36 +103,9 @@ public class WelcomeActivity extends AppCompatActivity  {
                 startActivity(new Intent(this,OrderActivity.class));
                 break;
             case R.id.history:
-                startActivity(new Intent(this,HistoryActivity.class));
                 break;
         }
         return true;
-    }
-
-    void addchild(DataSnapshot dataSnapshot)
-    {
-        String catagory=dataSnapshot.child("catagory").getValue().toString();
-        catagories.add(catagory);
-
-        if(!hs.containsKey(catagory))
-            hs.put(catagory,1);
-        else
-            hs.put(catagory,hs.get(catagory)+1);
-        cad.setmValues(new ArrayList<String>(catagories));
-        cad.notifyDataSetChanged();
-
-    }
-
-    void removechild(DataSnapshot dataSnapshot)
-    {
-        String catagory=dataSnapshot.child("catagory").getValue().toString();
-        if(hs.get(catagory)==1)
-        {
-            catagories.remove(catagory);
-            cad.notifyDataSetChanged();
-            cad.getmValues().remove(catagory);
-        }
-        hs.put(catagory,hs.get(catagory)-1);
     }
 
 
