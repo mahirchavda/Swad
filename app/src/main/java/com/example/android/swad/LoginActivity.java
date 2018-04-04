@@ -22,11 +22,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity {
      EditText username,password;
@@ -110,6 +112,18 @@ public class LoginActivity extends AppCompatActivity {
                                 hideProgress();
                                 User user=dataSnapshot.getValue(User.class);
                                 if(user!=null && user.getType().compareTo("U")==0) {
+
+                                    // Add Device Id in token field
+
+                                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                                    FirebaseUser muser = mAuth.getCurrentUser();
+                                    String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(muser.getUid());
+                                    mDatabase.child("token").setValue(refreshedToken);
+
+                                    // DONE
+
+
                                     SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                     SharedPreferences.Editor ed = sh.edit();
                                     ed.putString("username", username.getText().toString());

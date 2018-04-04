@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.android.swad.Adapters.Order2Adapter;
 import com.example.android.swad.Adapters.OrderAdapter;
 import com.example.android.swad.Entities.Order;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 
 public class OrderActivity extends AppCompatActivity {
 
-    Order2Adapter adapter;
+    OrderAdapter adapter;
     RecyclerView rview;
     Order prevorder=new Order();
     @Override
@@ -34,7 +33,7 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         setSupportActionBar((Toolbar)findViewById(R.id.my_toolbar));
-        adapter=new Order2Adapter(new ArrayList<Order>());
+        adapter=new OrderAdapter(new ArrayList<Order>());
         rview=findViewById(R.id.order_list);
         rview.setAdapter(adapter);
 
@@ -147,6 +146,4 @@ public class OrderActivity extends AppCompatActivity {
         }
         return true;
     }
-
-
 }

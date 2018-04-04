@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 public class SignupActivity extends AppCompatActivity {
@@ -101,6 +102,16 @@ public class SignupActivity extends AppCompatActivity {
 
                                         final User user=new User(usrname,pasword,"U",null);
                                         database.setValue(user);
+
+                                        // Add Device Id in token field
+
+                                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                                        FirebaseUser muser = mAuth.getCurrentUser();
+                                        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(muser.getUid());
+                                        mDatabase.child("token").setValue(refreshedToken);
+
+                                        // DONE
 
                                         database.addValueEventListener(new ValueEventListener() {
                                             @Override
