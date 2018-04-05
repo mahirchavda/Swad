@@ -108,7 +108,7 @@ public class ItemActivity extends AppCompatActivity {
                 for (DataSnapshot o:dataSnapshot.getChildren())
                     a.add(o.getValue(Item.class));
 
-                rview.setAdapter(new ItemAdapter(a,listener));
+                rview.setAdapter(new ItemAdapter(a,listener,getApplicationContext()));
             }
 
 

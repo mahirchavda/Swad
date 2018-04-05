@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:id="@+id/item_image"
-        app:srcCompat="@drawable/food" />
+        android:src="@drawable/food" />
 
 
     <LinearLayout

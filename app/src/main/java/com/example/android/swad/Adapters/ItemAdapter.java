@@ -1,5 +1,6 @@
 package com.example.android.swad.Adapters;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.swad.Entities.Item;
 import com.example.android.swad.R;
 
@@ -21,6 +23,7 @@ import java.util.List;
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     private final List<Item> mValues;
+    private Context context;
 
     //private final OnListFragmentInteractionListener mListener;
     private CatagoryAdapter.RecyclerViewClickListerner mListener;
@@ -29,6 +32,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         mListener = listener;
 
     }
+
+    public ItemAdapter(List<Item> items, CatagoryAdapter.RecyclerViewClickListerner listener, Context context) {
+        mValues = items;
+        mListener = listener;
+        this.context=context;
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,7 +55,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         //holder.image.setText(mValues.get(position).getImage());
         holder.rating.setText(mValues.get(position).getRating());
         holder.price.setText(mValues.get(position).getPrice());
-
+        Glide.with(context).load(mValues.get(position).getImage()).into(holder.image);
         holder.mOnclicklisterner=mListener;
 
 
