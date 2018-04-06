@@ -1,12 +1,15 @@
 package com.example.android.swad.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.swad.Entities.Order;
 import com.example.android.swad.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,10 +28,16 @@ public class Order2Adapter extends RecyclerView.Adapter<Order2Adapter.ViewHolder
     }
 
     private  List<Order> mValues;
-
+    private Context context;
     public Order2Adapter(List<Order> items) {
         mValues = items;
     }
+
+    public Order2Adapter(List<Order> items, Context context) {
+        mValues = items;
+        this.context=context;
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -37,6 +46,8 @@ public class Order2Adapter extends RecyclerView.Adapter<Order2Adapter.ViewHolder
         return new ViewHolder(view);
     }
 
+
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
@@ -44,6 +55,7 @@ public class Order2Adapter extends RecyclerView.Adapter<Order2Adapter.ViewHolder
         holder.item.setText(mValues.get(position).getItem_name().toString());
         holder.quantity.setText(Integer.toString(mValues.get(position).getQuantity()));
         holder.time.setText(Long.toString(mValues.get(position).getWaiting_time()));
+        //Glide.with(context).load(mValues.get(position).getImage()).into(holder.image);
     }
 
     @Override
@@ -55,14 +67,14 @@ public class Order2Adapter extends RecyclerView.Adapter<Order2Adapter.ViewHolder
 
         TextView ordernumber,item,quantity,time;
         Button prepare;
-
+        ImageView image;
         public ViewHolder(View view) {
             super(view);
             ordernumber=(TextView)view.findViewById(R.id.order_number);
             item=(TextView)view.findViewById(R.id.order_item_name);
             quantity=(TextView)view.findViewById(R.id.order_quantity);
             time=(TextView)view.findViewById(R.id.order_preparing_time);
-
+            image=(ImageView)view.findViewById(R.id.item_image);
         }
 
         @Override

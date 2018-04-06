@@ -18,6 +18,7 @@ import com.example.android.swad.Entities.Cart;
 import com.example.android.swad.Entities.Order;
 import com.example.android.swad.Library.TinyDB;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +38,8 @@ public class CartActivity extends AppCompatActivity {
     private Button remove,ordernow;
     private ArrayList<String> itemnames;
     private HashMap<String,Long> as=new HashMap<>();
-    DatabaseReference db;
+    DatabaseReference db1;
+    private long busytime=0;
     String uid;
 
 
@@ -54,34 +56,98 @@ public class CartActivity extends AppCompatActivity {
         final CatagoryAdapter.RecyclerViewClickListerner mlistener=new CatagoryAdapter.RecyclerViewClickListerner() {
             @Override
             public void onClick(View view,final int position) {
-                Toast.makeText(CartActivity.this, "hey", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(CartActivity.this, "hey", Toast.LENGTH_SHORT).show();
             }
         };
         cartadapter=new CartAdapter(new ArrayList<Cart>(cartitems),mlistener);
         ordernow=(Button)findViewById(R.id.item_order);
-        db= FirebaseDatabase.getInstance().getReference("orders");
+        db1= FirebaseDatabase.getInstance().getReference("orders");
         uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         TinyDB tiny=new TinyDB(CartActivity.this);
+
+        DatabaseReference db=FirebaseDatabase.getInstance().getReference("chefs");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                as.clear();
+                for (DataSnapshot d:dataSnapshot.getChildren()) {
+                    as.put(d.getKey(),(Long)d.getValue());
+                }
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
         ordernow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for(Cart c:cartadapter.getmValues()) {
-                    Order order = new Order(uid, c.getItem().getName(), "waiting", c.getQuantitiy());
-                    order.setOrdernumber(db.push().getKey());
-                      String mini="";
-                      long min=Long.MAX_VALUE;
-                    for(String key:as.keySet())
-                    {
-                        if(as.get(key)<min) {
-                            min = as.get(key);
-                            mini=key;
+                    final Order order = new Order(uid, c.getItem().getName(), "waiting", c.getQuantitiy());
+                    order.setOrdernumber(db1.push().getKey());
+                    order.setOrdertime(new Date().getTime());
+
+
+
+
+
+
+
+                    DatabaseReference busyref=FirebaseDatabase.getInstance().getReference("busytime");
+                    busyref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            busytime=(long)dataSnapshot.getValue();
                         }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    order.setItem_waiting_time(Integer.parseInt(c.getItem().getAverage_making_time()));
+
+
+                    HashMap<String,Long> as2=new HashMap<>(as);
+                    long maxval=Long.MIN_VALUE;
+                    for(int i=0;i< order.getQuantity();i++)
+                    {
+                        String mini="";
+                        long min=Long.MAX_VALUE;
+                        for(String key:as2.keySet())
+                        {
+                            if(as2.get(key)<min) {
+                                min = as2.get(key);
+                                mini=key;
+                            }
+                        }
+                        if(Math.max(min,new Date().getTime())+order.getItem_waiting_time()*60*1000>maxval)
+                        {
+                            maxval=Math.max(min,new Date().getTime())+order.getItem_waiting_time()*60*1000;
+                        }
+                        as2.put(mini,Math.max(min,new Date().getTime())+order.getItem_waiting_time()*60*1000);
+
                     }
 
 
-                    Long minutes=Math.max(0,(min-new Date().getTime()))/(60*1000)+Long.parseLong(c.getItem().getAverage_making_time())*(c.getQuantitiy());
-                    order.setItem_waiting_time(Integer.parseInt(c.getItem().getAverage_making_time()));
+
+
+
+
+                    Long minutes=(maxval-new Date().getTime())/(60*1000)+busytime;
+
+                    FirebaseDatabase.getInstance().getReference("busytime").setValue(minutes);
                     order.setWaiting_time(minutes);
                    //order.setChefs(new ArrayList<String>());
                    order.setRemaining(c.getQuantitiy());
@@ -94,21 +160,6 @@ public class CartActivity extends AppCompatActivity {
 
 
 
-        DatabaseReference db=FirebaseDatabase.getInstance().getReference("chefs");
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot d:dataSnapshot.getChildren()) {
-                    as.put(d.getKey(),(Long)d.getValue());
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
 
         displayReceivedData(tiny.getListObject("selected_items",Cart.class));

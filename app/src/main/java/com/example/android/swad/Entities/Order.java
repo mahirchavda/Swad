@@ -16,13 +16,34 @@ public class Order implements Serializable {
     private int remaining;
     private String ordernumber;
     private long waiting_time;
-    private int item_waiting_time;
+    private long item_waiting_time;
+    private int completed;
+    private long ordertime;
 
-    public int getItem_waiting_time() {
+    public long getOrdertime() {
+        return ordertime;
+    }
+
+    public void setOrdertime(long ordertime) {
+        this.ordertime = ordertime;
+    }
+
+
+
+
+    public int getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(int completed) {
+        this.completed = completed;
+    }
+
+    public long getItem_waiting_time() {
         return item_waiting_time;
     }
 
-    public void setItem_waiting_time(int item_waiting_time) {
+    public void setItem_waiting_time(long item_waiting_time) {
         this.item_waiting_time = item_waiting_time;
     }
 
@@ -99,7 +120,7 @@ public class Order implements Serializable {
     public boolean equals(Object o)
     {
         Order os=(Order)o;
-        return(o!=null && os!=null && os.getOrdernumber()!=null && getOrdernumber()!=null && ordernumber.compareTo(os.getOrdernumber())==0 && remaining==os.getRemaining());
+        return(o!=null && os!=null && os.getOrdernumber()!=null && getOrdernumber()!=null && ordernumber.compareTo(os.getOrdernumber())==0 && remaining==os.getRemaining() && completed==os.getCompleted());
     }
 
 

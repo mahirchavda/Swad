@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.android.swad.Adapters.Order2Adapter;
 import com.example.android.swad.Adapters.OrderAdapter;
 import com.example.android.swad.Entities.Order;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,13 +20,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class OrderActivity extends AppCompatActivity {
 
-    OrderAdapter adapter;
+    Order2Adapter adapter;
     RecyclerView rview;
     Order prevorder=new Order();
     @Override
@@ -33,7 +36,7 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         setSupportActionBar((Toolbar)findViewById(R.id.my_toolbar));
-        adapter=new OrderAdapter(new ArrayList<Order>());
+        adapter=new Order2Adapter(new ArrayList<Order>());
         rview=findViewById(R.id.order_list);
         rview.setAdapter(adapter);
 
@@ -43,10 +46,8 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Order o=dataSnapshot.getValue(Order.class);
-                if(o.getStatus().compareTo("waiting")==0 || o.getStatus().compareTo("preparing")==0)
+                if((o.getStatus().compareTo("waiting")==0 || o.getStatus().compareTo("preparing")==0) && o.getUid().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid())==0)
                 {
-
-
                     adapter.getmValues().add(0,o);
                     adapter.notifyDataSetChanged();
                 }
@@ -56,7 +57,7 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Order o=dataSnapshot.getValue(Order.class);
-                if(o.getStatus().compareTo("completed")==0)
+                if(o.getStatus().compareTo("completed")==0 && o.getStatus().compareTo("preparing")==0 && o.getUid().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid())==0)
                 {
                     int index=-1;
                     for(int i=0;i<adapter.getmValues().size();i++)
@@ -73,8 +74,9 @@ public class OrderActivity extends AppCompatActivity {
                     adapter.getmValues().remove(index);
                     adapter.notifyDataSetChanged();
                 }
-                if(o.getStatus().compareTo("preparing")==0 && !o.equals(prevorder))
+                if(o.getStatus().compareTo("preparing")==0 && !o.equals(prevorder) && o.getStatus().compareTo("preparing")==0 && o.getUid().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid())==0)
                 {
+                    //Toast.makeText(OrderActivity.this, "started preparing "+o.getQuantity()+" "+o.getCompleted(), Toast.LENGTH_SHORT).show();
                     int index=-1;
                     for(int i=0;i<adapter.getmValues().size();i++)
                     {
@@ -84,15 +86,15 @@ public class OrderActivity extends AppCompatActivity {
                             index=i;
                         }
                     }
-
                     //int index=adapter.getmValues().indexOf(o);
                     //DatabaseReference dbref=FirebaseDatabase.getInstance().getReference("dishes").child("name").equalTo(o.getItem_name());
-                    //Toast.makeText(OrderActivity.this, "stated preparing "+o.getQuantity()+" "+index, Toast.LENGTH_SHORT).show();
+
                     Date d=new Date();
 
                     prevorder=o;
                     adapter.getmValues().get(index).setWaiting_time((o.getRemaining()+1)*o.getItem_waiting_time());
                     adapter.notifyDataSetChanged();
+
                 }
 
             }
@@ -112,6 +114,17 @@ public class OrderActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
+
+
+
+
+
+
+
 
     }
 

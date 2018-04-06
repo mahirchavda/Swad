@@ -35,7 +35,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             mute = remoteMessage.getData().get("mute");
             remaining = Integer.parseInt(remoteMessage.getData().get("remaining"));
             quantity = Integer.parseInt(remoteMessage.getData().get("quantity"));
-            if (quantity - remaining - 1 == 0){
+            if (quantity - remaining - 1 <= 0){
                 notificationBody = "Preparing Started";
             } else if(mute.compareToIgnoreCase("false") == 0) {
                 notificationBody = "Order is Completed";
