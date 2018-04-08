@@ -44,6 +44,7 @@ public class HistoryActivity extends AppCompatActivity {
                 if(o.getStatus().compareTo("completed")==0) {
                     adapter.getmValues().add(0,o);
                     adapter.notifyDataSetChanged();
+                    rview.scheduleLayoutAnimation();
                 }
             }
 

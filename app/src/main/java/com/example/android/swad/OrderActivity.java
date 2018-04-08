@@ -50,6 +50,7 @@ public class OrderActivity extends AppCompatActivity {
                 {
                     adapter.getmValues().add(o);
                     adapter.notifyDataSetChanged();
+                    rview.scheduleLayoutAnimation();
                 }
 
             }
@@ -73,6 +74,7 @@ public class OrderActivity extends AppCompatActivity {
                     if(index!=-1)
                     adapter.getmValues().remove(index);
                     adapter.notifyDataSetChanged();
+                    rview.scheduleLayoutAnimation();
                 }
                 if(o.getStatus().compareTo("preparing")==0 && !o.equals(prevorder) && o.getStatus().compareTo("preparing")==0 && o.getUid().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid())==0)
                 {
@@ -94,7 +96,7 @@ public class OrderActivity extends AppCompatActivity {
                     prevorder=o;
                     adapter.getmValues().get(index).setWaiting_time((o.getRemaining()+1)*o.getItem_waiting_time());
                     adapter.notifyDataSetChanged();
-
+                    rview.scheduleLayoutAnimation();
                 }
 
             }

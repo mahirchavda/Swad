@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Button;
 
 import com.example.android.swad.Adapters.CatagoryAdapter;
@@ -39,7 +40,7 @@ public class WelcomeActivity extends AppCompatActivity  {
         catagories=new ArrayList<>();
          rview=(RecyclerView)findViewById(R.id.catagory_item_list);
          rview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        DatabaseReference database= FirebaseDatabase.getInstance().getReference("dishes");
+         DatabaseReference database= FirebaseDatabase.getInstance().getReference("dishes");
 
         database.addChildEventListener(new ChildEventListener() {
             @Override
@@ -122,7 +123,7 @@ public class WelcomeActivity extends AppCompatActivity  {
             hs.put(catagory,hs.get(catagory)+1);
         cad.setmValues(new ArrayList<String>(catagories));
         cad.notifyDataSetChanged();
-
+        rview.scheduleLayoutAnimation();
     }
 
     void removechild(DataSnapshot dataSnapshot)

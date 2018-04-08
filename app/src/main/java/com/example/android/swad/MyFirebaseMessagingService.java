@@ -21,38 +21,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         //Log.d(TAG, "From: " + remoteMessage.getFrom());
 
-        String notificationTitle = null;
-        String notificationBody = null;
-        String notificationId = null;
-        int quantity,remaining;
-        String mute = null;
-
+        String orderid , name, mute, message;
+        int ordertime;
 
         if(remoteMessage.getData() != null){
             Log.d(TAG, "Message data payload: " + remoteMessage.getData().get("name"));
-            notificationId = remoteMessage.getData().get("orderid");
-            notificationTitle = remoteMessage.getData().get("name");
+            orderid = remoteMessage.getData().get("orderid");
+
+            ordertime = new Long((Long.parseLong(remoteMessage.getData().get("ordertime")) - new Long("1523211000000"))).intValue();
+            name = remoteMessage.getData().get("name");
             mute = remoteMessage.getData().get("mute");
-            remaining = Integer.parseInt(remoteMessage.getData().get("remaining"));
-            quantity = Integer.parseInt(remoteMessage.getData().get("quantity"));
-            if (quantity - remaining - 1 <= 0){
-                notificationBody = "Preparing Started";
-            } else if(mute.compareToIgnoreCase("false") == 0) {
-                notificationBody = "Order is Completed";
-            } else {
-                notificationBody = "" + (quantity-remaining - 1) + " of " + quantity + " completed";
-            }
+            message = remoteMessage.getData().get("message");
+
+            sendNotification(ordertime,name, message, mute);
         }
-        sendNotification(notificationId,notificationTitle, notificationBody, mute);
+
     }
 
-    private void sendNotification(String notificationId,String notificationTitle, String notificationBody, String mute) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("title", "title");
-        intent.putExtra("message", "message");
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+    private void sendNotification(int notificationId,String notificationTitle, String notificationBody, String mute) {
 
         long[] v = {500,1000};
 
@@ -61,8 +47,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSmallIcon(R.drawable.food)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationBody)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
+                .setAutoCancel(true);
 
         if(mute.compareToIgnoreCase("false") == 0){
             notificationBuilder.setSound(defaultSoundUri);

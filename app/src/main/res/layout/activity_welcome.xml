@@ -39,6 +39,6 @@
         android:layout_height="wrap_content"
         tools:context="fire1.android.com.login.CatagoryFragment"
         tools:listitem="@layout/catagory_item"
-
+        android:layoutAnimation="@anim/layout_animation"
         />
 </LinearLayout>

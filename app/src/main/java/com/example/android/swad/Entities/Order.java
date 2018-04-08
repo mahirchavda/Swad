@@ -19,6 +19,8 @@ public class Order implements Serializable {
     private long item_waiting_time;
     private int completed;
     private long ordertime;
+    private long busytime;
+
     private String item_image;
 
     public String getItem_image() {
@@ -37,8 +39,13 @@ public class Order implements Serializable {
         this.ordertime = ordertime;
     }
 
+    public long getBusytime() {
+        return busytime;
+    }
 
-
+    public void setBusytime(long busytime) {
+        this.busytime = busytime;
+    }
 
     public int getCompleted() {
         return completed;

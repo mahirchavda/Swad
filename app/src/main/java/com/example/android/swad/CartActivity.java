@@ -202,7 +202,7 @@ public class CartActivity extends AppCompatActivity {
     {
         //cartitems.clear();
         for(Object o:data) {
-         Cart c=(Cart)o;
+            Cart c=(Cart)o;
             if (!itemnames.contains(c.getItem().getName())) {
                 itemnames.add(c.getItem().getName());
                 //cartitems.add(c);

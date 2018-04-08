@@ -36,6 +36,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
+        android:layoutAnimation="@anim/layout_animation"
         tools:listitem="@layout/order2_item"
         />
 </LinearLayout>
