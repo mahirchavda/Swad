@@ -105,7 +105,7 @@ public class CartActivity extends AppCompatActivity {
 
 
                     DatabaseReference busyref=FirebaseDatabase.getInstance().getReference("busytime");
-                    busyref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    busyref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             busytime=(long)dataSnapshot.getValue();
@@ -118,41 +118,46 @@ public class CartActivity extends AppCompatActivity {
                     });
                     order.setItem_waiting_time(Integer.parseInt(c.getItem().getAverage_making_time()));
 
-
-                    HashMap<String,Long> as2=new HashMap<>(as);
-                    long maxval=Long.MIN_VALUE;
-                    for(int i=0;i< order.getQuantity();i++)
-                    {
-                        String mini="";
-                        long min=Long.MAX_VALUE;
-                        for(String key:as2.keySet())
-                        {
-                            if(as2.get(key)<min) {
-                                min = as2.get(key);
-                                mini=key;
-                            }
+                    String mini1 = "";
+                    long min1 = Long.MAX_VALUE;
+                    for (String key : as.keySet()) {
+                        if (as.get(key) < min1) {
+                            min1 = as.get(key);
+                            mini1 = key;
                         }
-                        if(Math.max(min,new Date().getTime())+order.getItem_waiting_time()*60*1000>maxval)
-                        {
-                            maxval=Math.max(min,new Date().getTime())+order.getItem_waiting_time()*60*1000;
-                        }
-                        as2.put(mini,Math.max(min,new Date().getTime())+order.getItem_waiting_time()*60*1000);
-
                     }
 
 
 
+                        HashMap<String, Long> as2 = new HashMap<>(as);
+                        long maxval = Long.MIN_VALUE;
+                        for (int i = 0; i < order.getQuantity(); i++) {
+                            String mini = "";
+                            long min = Long.MAX_VALUE;
+                            for (String key : as2.keySet()) {
+                                if (as2.get(key) < min) {
+                                    min = as2.get(key);
+                                    mini = key;
+                                }
+                            }
+                            if (Math.max(min, new Date().getTime()) + order.getItem_waiting_time() * 60 * 1000 > maxval) {
+                                maxval = Math.max(min, new Date().getTime()) + order.getItem_waiting_time() * 60 * 1000;
+                            }
+                            as2.put(mini, Math.max(min, new Date().getTime()) + order.getItem_waiting_time() * 60 * 1000);
+
+                        }
 
 
+                        Long minutes = (maxval - new Date().getTime()) / (60 * 1000);
+                        Long lminutes=Math.max(min1-new Date().getTime(),0)/(60 * 1000)+busytime+order.getQuantity()*order.getItem_waiting_time();
+                        FirebaseDatabase.getInstance().getReference("busytime").setValue(minutes+busytime);
+                        order.setWaiting_time(lminutes);
+                        //order.setChefs(new ArrayList<String>());
+                    order.setBusytime(minutes);
+                    order.setRemaining(c.getQuantitiy());
+                        FirebaseDatabase.getInstance().getReference("orders/" + order.getOrdernumber()).setValue(order);
+                        //db.push().setValue(order);
 
-                    Long minutes=(maxval-new Date().getTime())/(60*1000)+busytime;
-
-                    FirebaseDatabase.getInstance().getReference("busytime").setValue(minutes);
-                    order.setWaiting_time(minutes);
-                   //order.setChefs(new ArrayList<String>());
-                   order.setRemaining(c.getQuantitiy());
-                   FirebaseDatabase.getInstance().getReference("orders/"+ order.getOrdernumber()).setValue(order);
-                   //db.push().setValue(order);
                 }
                 Toast.makeText(CartActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
             }
@@ -210,6 +215,8 @@ public class CartActivity extends AppCompatActivity {
                 cartadapter.getmValues().add(c);
                 // cartadapter.notifyItemInserted(cartadapter.getmValues().size());
                 cartadapter.notifyDataSetChanged();
+                if(recyclerView!=null)
+                recyclerView.scheduleLayoutAnimation();
             }
         }
         ArrayList<Object> a=new ArrayList<Object>(cartadapter.getmValues());

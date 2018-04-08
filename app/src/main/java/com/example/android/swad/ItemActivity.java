@@ -109,6 +109,7 @@ public class ItemActivity extends AppCompatActivity {
                     a.add(o.getValue(Item.class));
 
                 rview.setAdapter(new ItemAdapter(a,listener,getApplicationContext()));
+                rview.scheduleLayoutAnimation();
             }
 
 

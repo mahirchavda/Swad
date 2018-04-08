@@ -36,7 +36,9 @@
         android:layout_below="@+id/appBarLayout"
         app:layoutManager="LinearLayoutManager"
         tools:context="fire1.android.com.login.ItemFragment"
-        tools:listitem="@layout/dishes_item" />
+        tools:listitem="@layout/dishes_item"
+        android:layoutAnimation="@anim/layout_animation"
+        />
 
     <Button
         android:layout_width="match_parent"
