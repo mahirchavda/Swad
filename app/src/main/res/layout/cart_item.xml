@@ -1,80 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="20dp"
+    android:layout_marginRight="40dp"
+    android:layout_marginLeft="40dp"
+    android:background="#E1E1E1">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cart_item_name"
-        android:textSize="16sp"
-        android:textAlignment="center"
-        android:text="name"
-        />
+        android:orientation="horizontal">
 
 
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cart_item_catagory"
-        android:textSize="16sp"
-        android:textAlignment="center"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cart_item_avg_time"
-        android:textSize="16sp"
-        android:textAlignment="center"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="130dp"
+        android:layout_weight="1"
         android:id="@+id/cart_item_image"
-        android:textSize="16sp"
-        android:textAlignment="center"
-        />
+        android:src="@drawable/food" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cart_item_price"
-        android:textSize="16sp"
-        android:textAlignment="center"
-        />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cart_item_rating"
-        android:textSize="16sp"
-        android:textAlignment="center"
-        />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="130dp"
+        android:orientation="vertical"
+        android:layout_weight="2"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/cart_item_name"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:text="name"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/cart_item_category"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:text="category"
+            />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/cart_item_avg_time"
+            android:textSize="16sp"
+            tools:text="average time"
+            android:textAlignment="center"
+            />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/cart_item_price"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            tools:text="price"
+            />
+
+        <!--
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/item_rating"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            tools:text="rating"
+            />
+
+            -->
+    </LinearLayout>
+    </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_margin="5dp"
         >
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:text="+"
-            android:id="@+id/item_incr"
             android:layout_weight="1"
+            android:text="+"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:id="@+id/item_incr"
+
             />
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/item_quantity"
             android:text="0"
@@ -83,26 +117,23 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:text="-"
-            android:id="@+id/item_decr"
             android:layout_weight="1"
+            android:text="-"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:id="@+id/item_decr"
+
             />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:text="Remove"
+            android:foreground="?android:attr/selectableItemBackground"
             android:id="@+id/item_remove"
-            android:background="@color/colorAccent"
             />
 
 
     </LinearLayout>
-
-
-
-
 
 </LinearLayout>

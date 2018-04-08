@@ -4,5 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="mahi">#FF3F00</color>
+
+
+    <color name="background1">#E1E1E1</color>
+    <color name="background2">#7c43bd</color>
 </resources>
 <!-- Mahendra -->

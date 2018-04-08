@@ -4,13 +4,16 @@ package com.example.android.swad.Adapters;
  * Created by jenil on 18-03-2018.
  */
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.swad.Entities.Cart;
 import com.example.android.swad.R;
 import com.example.android.swad.WelcomeActivity;
@@ -24,12 +27,22 @@ private CatagoryAdapter.RecyclerViewClickListerner mListener;
 private ViewGroup parent;
 private LayoutInflater inflater;
 private WelcomeActivity wc;
+private Context context;
 public CartAdapter(List<Cart> items, CatagoryAdapter.RecyclerViewClickListerner mListener) {
         mValues = items;
         this.mListener=mListener;
         this.parent=parent;
         this.inflater=inflater;
         }
+
+    public CartAdapter(List<Cart> items, CatagoryAdapter.RecyclerViewClickListerner mListener,Context context) {
+        mValues = items;
+        this.mListener=mListener;
+        this.parent=parent;
+        this.inflater=inflater;
+        this.context=context;
+    }
+
 
 public void setmValues(List<Cart> mValues) {
         this.mValues = mValues;
@@ -52,12 +65,13 @@ public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 public void onBindViewHolder(final ViewHolder holder,final int position) {
         holder.name.setText(mValues.get(position).getItem().getName());
         holder.catagory.setText(mValues.get(position).getItem().getCatagory());
-        holder.average_making_time.setText(mValues.get(position).getItem().getAverage_making_time());
-        holder.image.setText(mValues.get(position).getItem().getImage());
-        holder.rating.setText(mValues.get(position).getItem().getRating());
-        holder.price.setText(mValues.get(position).getItem().getPrice());
+        holder.average_making_time.setText(mValues.get(position).getItem().getAverage_making_time() + " min");
+        //holder.rating.setText(mValues.get(position).getItem().getRating());
+        holder.price.setText("₹" + mValues.get(position).getItem().getPrice());
         //holder.item_checkbo.setChecked(false);
         holder.quantity.setText("1");
+        //Glide.with(context).load(mValues.get(position).getItem().getImage()).into(holder.image);
+        Glide.with(context).load(mValues.get(position).getItem().getImage()).placeholder(R.drawable.food).into(holder.image);
 
         holder.incr.setOnClickListener(new View.OnClickListener() {
 @Override
@@ -108,18 +122,19 @@ public int getItemViewType(int position) {
         }
 
 public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    TextView name,catagory,average_making_time,image,rating,price,quantity;
+    TextView name,catagory,average_making_time,rating,price,quantity;
     Button incr,decr,remove;
+    ImageView image;
     CatagoryAdapter.RecyclerViewClickListerner mOnclick;
 
     public ViewHolder(View view,CatagoryAdapter.RecyclerViewClickListerner r) {
         super(view);
         name=(TextView)view.findViewById(R.id.cart_item_name);
-        catagory=(TextView)view.findViewById(R.id.cart_item_catagory);
+        catagory=(TextView)view.findViewById(R.id.cart_item_category);
         average_making_time=(TextView)view.findViewById(R.id.cart_item_avg_time);
         price=(TextView)view.findViewById(R.id.cart_item_price);
-        image=(TextView)view.findViewById(R.id.cart_item_image);
-        rating=(TextView)view.findViewById(R.id.cart_item_rating);
+        image=(ImageView)view.findViewById(R.id.cart_item_image);
+        //rating=(TextView)view.findViewById(R.id.cart_item_rating);
         incr=(Button)view.findViewById(R.id.item_incr);
         decr=(Button)view.findViewById(R.id.item_decr);
         remove=(Button)view.findViewById(R.id.item_remove);

@@ -52,10 +52,10 @@ public class Order2Adapter extends RecyclerView.Adapter<Order2Adapter.ViewHolder
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.ordernumber.setText(mValues.get(position).getOrdernumber().toString());
-        holder.item.setText(mValues.get(position).getItem_name().toString());
+        holder.itemname.setText(mValues.get(position).getItem_name().toString());
         holder.quantity.setText(Integer.toString(mValues.get(position).getQuantity()));
-        holder.time.setText(Long.toString(mValues.get(position).getWaiting_time()));
-        //Glide.with(context).load(mValues.get(position).getImage()).into(holder.image);
+        holder.time.setText(Long.toString(mValues.get(position).getWaiting_time()) + "min");
+        Glide.with(context).load(mValues.get(position).getItem_image()).placeholder(R.drawable.food).into(holder.image);
     }
 
     @Override
@@ -65,13 +65,12 @@ public class Order2Adapter extends RecyclerView.Adapter<Order2Adapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView ordernumber,item,quantity,time;
-        Button prepare;
+        TextView ordernumber,itemname,quantity,time;
         ImageView image;
         public ViewHolder(View view) {
             super(view);
             ordernumber=(TextView)view.findViewById(R.id.order_number);
-            item=(TextView)view.findViewById(R.id.order_item_name);
+            itemname=(TextView)view.findViewById(R.id.order_item_name);
             quantity=(TextView)view.findViewById(R.id.order_quantity);
             time=(TextView)view.findViewById(R.id.order_preparing_time);
             image=(ImageView)view.findViewById(R.id.item_image);

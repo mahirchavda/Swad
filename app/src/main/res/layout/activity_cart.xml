@@ -28,9 +28,9 @@
         android:id="@+id/cart_item_list"
         android:name="fire1.android.com.login.CartFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/appBarLayout"
-
+        android:layout_marginBottom="50dp"
         android:layout_centerHorizontal="true"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/cart_item" />
@@ -40,8 +40,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:text="order now"
         android:id="@+id/item_order"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_marginRight="60dp"
+        android:layout_marginLeft="60dp"
         />
 
 

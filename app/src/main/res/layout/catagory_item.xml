@@ -4,13 +4,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/catagory_item">
+    android:id="@+id/catagory_item"
+    android:layout_marginTop="20dp"
+    android:layout_marginRight="40dp"
+    android:layout_marginLeft="40dp"
+    >
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/catagory_name"
         tools:text="Hello"
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp"
+        android:background="@color/background1"
+        android:foreground="?android:attr/selectableItemBackground"
         />
 
 </LinearLayout>

@@ -36,7 +36,7 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         setSupportActionBar((Toolbar)findViewById(R.id.my_toolbar));
-        adapter=new Order2Adapter(new ArrayList<Order>());
+        adapter=new Order2Adapter(new ArrayList<Order>(),getApplicationContext());
         rview=findViewById(R.id.order_list);
         rview.setAdapter(adapter);
 
@@ -48,7 +48,7 @@ public class OrderActivity extends AppCompatActivity {
                 Order o=dataSnapshot.getValue(Order.class);
                 if((o.getStatus().compareTo("waiting")==0 || o.getStatus().compareTo("preparing")==0) && o.getUid().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid())==0)
                 {
-                    adapter.getmValues().add(0,o);
+                    adapter.getmValues().add(o);
                     adapter.notifyDataSetChanged();
                 }
 

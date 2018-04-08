@@ -4,16 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -58,10 +57,11 @@ public class ItemActivity extends AppCompatActivity {
                 SharedPreferences.Editor ed=sh.edit();
                 TinyDB tinyDB=new TinyDB(ItemActivity.this);
                 ArrayList<Object> temp= tinyDB.getListObject("selected_items",Cart.class);
-                Toast.makeText(ItemActivity.this, "Added to cart "+temp.size(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ItemActivity.this, "Added to cart "+temp.size(), Toast.LENGTH_SHORT).show();
                 temp.addAll(selected_items);
                 tinyDB.putListObject("selected_items",temp);
-                startActivity(new Intent(ItemActivity.this,CartActivity.class));
+                //startActivity(new Intent(ItemActivity.this,CartActivity.class));
+                Toast.makeText(ItemActivity.this, "Items Added to Cart", Toast.LENGTH_SHORT).show();
             }
         });
         // Set the adapter
@@ -69,6 +69,7 @@ public class ItemActivity extends AppCompatActivity {
 
 
         rview=(RecyclerView)findViewById(R.id.list);
+
         final CatagoryAdapter.RecyclerViewClickListerner listener = new CatagoryAdapter.RecyclerViewClickListerner() {
             @Override
             public void onClick(View view, final int position) {
@@ -76,18 +77,25 @@ public class ItemActivity extends AppCompatActivity {
                 LinearLayout lm=(LinearLayout)view.findViewById(R.id.itemlist_item);
                 ColorDrawable cdw=(ColorDrawable) lm.getBackground();
 
-                if(cdw.getColor()== Color.WHITE) {
+                //Toast.makeText(ItemActivity.this,"backcolor  "+cdw.getColor(),Toast.LENGTH_SHORT).show();
+                int background1 = getResources().getColor(R.color.background1);
+                int background2 = getResources().getColor(R.color.background2);
+
+                //Toast.makeText(ItemActivity.this,"colo 1  "+background1,Toast.LENGTH_SHORT).show();
+                if(cdw.getColor()== background1) {
                     count++;
                     selected_items.add(new Cart(a.get(position),1));
-                    lm.setBackgroundColor(Color.GREEN);
+                    lm.setBackgroundColor(background2);
+                    //Toast.makeText(ItemActivity.this, "In if "+cdw.getColor()+" "+background1+" "+Color.WHITE, Toast.LENGTH_SHORT).show();
                 }
                 else {
                     count--;
                     selected_items.remove(new Cart(a.get(position),1));
-                    lm.setBackgroundColor(Color.WHITE);
+                    lm.setBackgroundColor(background1);
+                    //Toast.makeText(ItemActivity.this, "In else", Toast.LENGTH_SHORT).show();
                 }
                 //
-                // Toast.makeText(getContext(),""+selected_items.size(),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ItemActivity.this,""+selected_items.size(),Toast.LENGTH_SHORT).show();
                 if(count>0)
                     addtocart.setVisibility(View.VISIBLE);
                 else
@@ -99,7 +107,7 @@ public class ItemActivity extends AppCompatActivity {
         Intent intent=getIntent();
         String message=intent.getStringExtra("catagory_name");
 
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         Query q=FirebaseDatabase.getInstance().getReference("dishes").orderByChild("catagory").equalTo(message);
         q.addValueEventListener(new ValueEventListener() {
             @Override

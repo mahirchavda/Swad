@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,22 +12,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.android.swad.Adapters.*;
-import com.example.android.swad.Entities.Item;
+import com.example.android.swad.Adapters.CatagoryAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class WelcomeActivity extends AppCompatActivity  {
 
@@ -54,9 +48,7 @@ public class WelcomeActivity extends AppCompatActivity  {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
@@ -64,14 +56,10 @@ public class WelcomeActivity extends AppCompatActivity  {
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) { }
         });
 
         CatagoryAdapter.RecyclerViewClickListerner mListener=new CatagoryAdapter.RecyclerViewClickListerner() {
@@ -125,10 +113,11 @@ public class WelcomeActivity extends AppCompatActivity  {
     void addchild(DataSnapshot dataSnapshot)
     {
         String catagory=dataSnapshot.child("catagory").getValue().toString();
-        catagories.add(catagory);
 
-        if(!hs.containsKey(catagory))
-            hs.put(catagory,1);
+        if(!hs.containsKey(catagory)) {
+            hs.put(catagory, 1);
+            catagories.add(catagory);
+        }
         else
             hs.put(catagory,hs.get(catagory)+1);
         cad.setmValues(new ArrayList<String>(catagories));

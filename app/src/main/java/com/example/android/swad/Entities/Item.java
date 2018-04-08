@@ -7,7 +7,8 @@ package com.example.android.swad.Entities;
 public class Item  {
     String name;
     String catagory;
-    String average_making_time,image,rating,price;
+    String average_making_time,image,price;
+    //String rating;
 
     public Item(){}
 
@@ -16,8 +17,8 @@ public class Item  {
         this.catagory = catagory;
         this.average_making_time = average_making_time;
         this.image=image;
-        this.rating=rating;
         this.price=price;
+        //this.rating=rating;
     }
 
     public void setAverage_making_time(String average_making_time) {
@@ -32,13 +33,9 @@ public class Item  {
         this.image = image;
     }
 
-    public String getRating() {
-        return rating;
-    }
+    //public String getRating() { return rating; }
 
-    public void setRating(String rating) {
-        this.rating = rating;
-    }
+    //public void setRating(String rating) { this.rating = rating; }
 
     public String getPrice() {
         return price;

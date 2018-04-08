@@ -50,18 +50,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.name.setText(mValues.get(position).getName());
-        //holder.catagory.setText(mValues.get(position).getCatagory());
-        holder.average_making_time.setText(mValues.get(position).getAverage_making_time());
+        holder.catagory.setText(mValues.get(position).getCatagory());
+        holder.average_making_time.setText(mValues.get(position).getAverage_making_time() + " min");
         //holder.image.setText(mValues.get(position).getImage());
-        holder.rating.setText(mValues.get(position).getRating());
-        holder.price.setText(mValues.get(position).getPrice());
-        Glide.with(context).load(mValues.get(position).getImage()).into(holder.image);
+        //holder.rating.setText(mValues.get(position).getRating());
+        holder.price.setText("₹" + mValues.get(position).getPrice());
+        //Glide.with(context).load(mValues.get(position).getImage()).into(holder.image);
+        Glide.with(context).load(mValues.get(position).getImage()).placeholder(R.drawable.food).into(holder.image);
         holder.mOnclicklisterner=mListener;
-
-
-
-
-
 
     }
 
@@ -71,8 +67,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView name,catagory,average_making_time,rating,price;
-        //CheckBox item_checkbox;
+        TextView name,catagory,average_making_time,price;
+        //TextView rating;
+
         ImageView image;
         private CatagoryAdapter.RecyclerViewClickListerner mOnclicklisterner;
 
@@ -80,13 +77,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         public ViewHolder(View view,CatagoryAdapter.RecyclerViewClickListerner r) {
             super(view);
             name=(TextView)view.findViewById(R.id.item_name);
-            //catagory=(TextView)view.findViewById(R.id.item_catagory);
+            catagory=(TextView)view.findViewById(R.id.category);
             average_making_time=(TextView)view.findViewById(R.id.item_avg_time);
             price=(TextView)view.findViewById(R.id.item_price);
             image=(ImageView)view.findViewById(R.id.item_image);
-            rating=(TextView)view.findViewById(R.id.item_rating);
+            //rating=(TextView)view.findViewById(R.id.item_rating);
             LinearLayout lm=(LinearLayout) view.findViewById(R.id.itemlist_item);
-            lm.setBackgroundColor(Color.WHITE);
+
             mOnclicklisterner=r;
             view.setOnClickListener(this);
 

@@ -31,7 +31,7 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         setSupportActionBar((Toolbar)findViewById(R.id.my_toolbar));
-        adapter=new OrderAdapter(new ArrayList<Order>());
+        adapter=new OrderAdapter(new ArrayList<Order>(),getApplicationContext());
         rview=findViewById(R.id.history_order_list);
         rview.setAdapter(adapter);
 

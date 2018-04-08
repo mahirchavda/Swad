@@ -19,6 +19,15 @@ public class Order implements Serializable {
     private long item_waiting_time;
     private int completed;
     private long ordertime;
+    private String item_image;
+
+    public String getItem_image() {
+        return item_image;
+    }
+
+    public void setItem_image(String item_image) {
+        this.item_image = item_image;
+    }
 
     public long getOrdertime() {
         return ordertime;
