@@ -201,10 +201,12 @@ public class CartActivity extends AppCompatActivity {
 
 
             Long minutes = (maxval - new Date().getTime()) / (60 * 1000) + busytime;
+            order.setBusytime(minutes-busytime);
             busytime=minutes;
             FirebaseDatabase.getInstance().getReference("busytime").setValue(minutes);
             order.setWaiting_time(minutes);
             //order.setChefs(new ArrayList<String>());
+
             order.setRemaining(c.getQuantitiy());
             FirebaseDatabase.getInstance().getReference("orders/" + order.getOrdernumber()).setValue(order);
             //db.push().setValue(order);
