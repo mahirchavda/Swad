@@ -7,8 +7,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/itemlist_item"
     android:layout_marginTop="20dp"
-    android:layout_marginRight="40dp"
-    android:layout_marginLeft="40dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
     android:background="#E1E1E1">
 
     <ImageView

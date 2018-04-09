@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
@@ -40,7 +41,7 @@ public class OrderActivity extends AppCompatActivity {
         rview=findViewById(R.id.order_list);
         rview.setAdapter(adapter);
 
-        DatabaseReference db= FirebaseDatabase.getInstance().getReference("orders");
+        Query db= FirebaseDatabase.getInstance().getReference("orders").orderByChild("ordertime");
 
         db.addChildEventListener(new ChildEventListener() {
             @Override
@@ -58,7 +59,7 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Order o=dataSnapshot.getValue(Order.class);
-                if(o.getStatus().compareTo("completed")==0 && o.getStatus().compareTo("preparing")==0 && o.getUid().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid())==0)
+                if(o.getStatus().compareTo("completed")==0 && o.getUid().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid())==0)
                 {
                     int index=-1;
                     for(int i=0;i<adapter.getmValues().size();i++)
@@ -76,7 +77,7 @@ public class OrderActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     rview.scheduleLayoutAnimation();
                 }
-                if(o.getStatus().compareTo("preparing")==0 && !o.equals(prevorder) && o.getStatus().compareTo("preparing")==0 && o.getUid().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid())==0)
+                if(o.getStatus().compareTo("preparing")==0 &&  o.getUid().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid())==0 && (!o.equals(prevorder) ||  o.getQuantity()==o.getRemaining()+1 && o.getChefs().size()==1))
                 {
                     //Toast.makeText(OrderActivity.this, "started preparing "+o.getQuantity()+" "+o.getCompleted(), Toast.LENGTH_SHORT).show();
                     int index=-1;
@@ -94,7 +95,7 @@ public class OrderActivity extends AppCompatActivity {
                     Date d=new Date();
 
                     prevorder=o;
-                    adapter.getmValues().get(index).setWaiting_time((o.getRemaining()+1)*o.getItem_waiting_time());
+                    adapter.getmValues().get(index).setWaiting_time(o.getWaiting_time());
                     adapter.notifyDataSetChanged();
                     rview.scheduleLayoutAnimation();
                 }

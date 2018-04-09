@@ -41,7 +41,7 @@ public class HistoryActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Order o=dataSnapshot.getValue(Order.class);
-                if(o.getStatus().compareTo("completed")==0) {
+                if(o.getStatus().compareTo("completed")==0 && o.getUid().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid())==0) {
                     adapter.getmValues().add(0,o);
                     adapter.notifyDataSetChanged();
                     rview.scheduleLayoutAnimation();

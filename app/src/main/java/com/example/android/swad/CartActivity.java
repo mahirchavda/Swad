@@ -46,6 +46,7 @@ public class CartActivity extends AppCompatActivity {
     DatabaseReference db1;
     private long busytime=0;
     String uid;
+    boolean b;
 
 
 
@@ -102,59 +103,28 @@ public class CartActivity extends AppCompatActivity {
                 if (!isNetworkAvailable()) {
                     showNetworkError();
                 } else {
-                    for (Cart c : cartadapter.getmValues()) {
-                        final Order order = new Order(uid, c.getItem().getName(), "waiting", c.getQuantitiy());
-                        order.setOrdernumber(db1.push().getKey());
-                        order.setOrdertime(new Date().getTime());
 
-
-                        DatabaseReference busyref = FirebaseDatabase.getInstance().getReference("busytime");
-                        busyref.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                busytime = (long) dataSnapshot.getValue();
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                        order.setItem_waiting_time(Integer.parseInt(c.getItem().getAverage_making_time()));
-                        order.setItem_image(c.getItem().getImage());
-
-                        HashMap<String, Long> as2 = new HashMap<>(as);
-                        long maxval = Long.MIN_VALUE;
-                        for (int i = 0; i < order.getQuantity(); i++) {
-                            String mini = "";
-                            long min = Long.MAX_VALUE;
-                            for (String key : as2.keySet()) {
-                                if (as2.get(key) < min) {
-                                    min = as2.get(key);
-                                    mini = key;
-                                }
-                            }
-                            if (Math.max(min, new Date().getTime()) + order.getItem_waiting_time() * 60 * 1000 > maxval) {
-                                maxval = Math.max(min, new Date().getTime()) + order.getItem_waiting_time() * 60 * 1000;
-                            }
-                            as2.put(mini, Math.max(min, new Date().getTime()) + order.getItem_waiting_time() * 60 * 1000);
-
+                    b=false;
+                    DatabaseReference busyref = FirebaseDatabase.getInstance().getReference("busytime");
+                    busyref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            busytime = (long) dataSnapshot.getValue();
+                            if(!b)
+                            fun();
+                            //Toast.makeText(CartActivity.this, "busytime updated", Toast.LENGTH_SHORT).show();
                         }
 
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                        Long minutes = (maxval - new Date().getTime()) / (60 * 1000) + busytime;
+                        }
+                    });
 
-                        FirebaseDatabase.getInstance().getReference("busytime").setValue(minutes);
-                        order.setWaiting_time(minutes);
-                        //order.setChefs(new ArrayList<String>());
-                        order.setRemaining(c.getQuantitiy());
-                        FirebaseDatabase.getInstance().getReference("orders/" + order.getOrdernumber()).setValue(order);
-                        //db.push().setValue(order);
-                    }
+
+
+
                     //Toast.makeText(CartActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
-                    new TinyDB(CartActivity.this).putListObject("selected_items", new ArrayList<Object>());
-                    startActivity(new Intent(CartActivity.this, OrderActivity.class));
-                    finish();
 
                 }
             }
@@ -197,6 +167,72 @@ public class CartActivity extends AppCompatActivity {
 
 
     }
+
+
+    public void fun()
+    {
+        b=true;
+        int price=0;
+        for (Cart c : cartadapter.getmValues()) {
+            final Order order = new Order(uid, c.getItem().getName(), "waiting", c.getQuantitiy());
+            order.setOrdernumber(db1.push().getKey());
+            order.setOrdertime(new Date().getTime());
+
+            order.setItem_waiting_time(Integer.parseInt(c.getItem().getAverage_making_time()));
+            order.setItem_image(c.getItem().getImage());
+
+            HashMap<String, Long> as2 = new HashMap<>(as);
+            long maxval = Long.MIN_VALUE;
+            for (int i = 0; i < order.getQuantity(); i++) {
+                String mini = "";
+                long min = Long.MAX_VALUE;
+                for (String key : as2.keySet()) {
+                    if (as2.get(key) < min) {
+                        min = as2.get(key);
+                        mini = key;
+                    }
+                }
+                if (Math.max(min, new Date().getTime()) + order.getItem_waiting_time() * 60 * 1000 > maxval) {
+                    maxval = Math.max(min, new Date().getTime()) + order.getItem_waiting_time() * 60 * 1000;
+                }
+                as2.put(mini, Math.max(min, new Date().getTime()) + order.getItem_waiting_time() * 60 * 1000);
+
+            }
+
+
+            Long minutes = (maxval - new Date().getTime()) / (60 * 1000) + busytime;
+            busytime=minutes;
+            FirebaseDatabase.getInstance().getReference("busytime").setValue(minutes);
+            order.setWaiting_time(minutes);
+            //order.setChefs(new ArrayList<String>());
+            order.setRemaining(c.getQuantitiy());
+            FirebaseDatabase.getInstance().getReference("orders/" + order.getOrdernumber()).setValue(order);
+            //db.push().setValue(order);
+            price+=Integer.parseInt(c.getItem().getPrice())*c.getQuantitiy();
+        }
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(CartActivity.this, Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? android.R.style.Theme_Material_Light_Dialog_Alert : -1);
+        alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
+        alertDialogBuilder
+                .setTitle("Order summary")
+                .setMessage("Total price is ₹"+price)
+                .setCancelable(true)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        new TinyDB(CartActivity.this).putListObject("selected_items", new ArrayList<Object>());
+                        startActivity(new Intent(CartActivity.this, OrderActivity.class));
+                        finish();
+
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
+
+
 
     protected void displayReceivedData(ArrayList<Object> data)
     {

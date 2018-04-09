@@ -136,7 +136,7 @@ public class Order implements Serializable {
     public boolean equals(Object o)
     {
         Order os=(Order)o;
-        return(o!=null && os!=null && os.getOrdernumber()!=null && getOrdernumber()!=null && ordernumber.compareTo(os.getOrdernumber())==0 && remaining==os.getRemaining() && completed==os.getCompleted());
+        return(o!=null && os!=null && os.getOrdernumber()!=null && getOrdernumber()!=null && ordernumber.compareTo(os.getOrdernumber())==0 && waiting_time==os.getWaiting_time());
     }
 
 
